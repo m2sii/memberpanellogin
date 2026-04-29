@@ -1,18 +1,8 @@
-# Vercel XHTTP Relay
-
-### 🇮🇷 راهنمای کامل فارسی — Complete Persian Setup Guide
-
-[![Telegram Channel](https://img.shields.io/badge/Telegram-%40avaco__cloud-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/avaco_cloud)
-
-> 📢 **کانال تلگرام Avaco Cloud** — برای آموزش‌های بیشتر، آپدیت‌ها، روش‌های دور زدن سانسور و کانفیگ‌های جدید عضو شو:
+* — برای آموزش‌های بیشتر، آپدیت‌ها، روش‌های دور زدن سانسور و کانفیگ‌های جدید عضو شو:
+* Member login
+>
 > 
-> 👉 **[https://t.me/avaco_cloud](https://t.me/avaco_cloud)**
-
-A minimal relay running on **Vercel Serverless Functions** (Node.js runtime, 128MB memory) that forwards **XHTTP** traffic from your Xray/V2Ray client to your backend Xray server. The goal: use Vercel's global edge network and the `*.vercel.app` domain as a front to hide the real IP of your origin server.
-
-> **v1.1 — Memory Optimization:** switched from Edge Runtime (~1GB per instance) to Node.js Serverless with 128MB memory + Fluid Compute concurrency. **~8x reduction in Provisioned Memory costs.**
-
----
+> 👉 **[
 
 ## فهرست
 
@@ -25,7 +15,7 @@ A minimal relay running on **Vercel Serverless Functions** (Node.js runtime, 128
 - [مرحله ۳ — اتصال SSH به VPS](#مرحله-۳--اتصال-ssh-به-vps)
 - [مرحله ۴ — نصب Xray](#مرحله-۴--نصب-xray)
 - [مرحله ۵ — گرفتن TLS Certificate](#مرحله-۵--گرفتن-tls-certificate)
-- [مرحله ۶ — کانفیگ Xray با XHTTP](#مرحله-۶--کانفیگ-xray-با-xhttp)
+- [مرحله ۶ — کانفیگ Xry با TP](#مرحله-۶--کانفیگ-با-xtp)
 - [مرحله ۷ — Deploy روی Vercel](#مرحله-۷--deploy-روی-vercel)
 - [مرحله ۸ — کانفیگ کلاینت](#مرحله-۸--کانفیگ-کلاینت)
 - [محدودیت‌های Vercel](#محدودیت‌های-vercel)
@@ -37,17 +27,17 @@ A minimal relay running on **Vercel Serverless Functions** (Node.js runtime, 128
 
 ## این پروژه برای کیه؟
 
-این پروژه فقط زمانی به دردت می‌خوره که **خودت یک سرور Xray با XHTTP داری** و می‌خوای IP اون رو با Vercel استتار کنی.
+این پروژه فقط زمانی به دردت می‌خوره که **خودت یک سرور Xray با XHP داری** و می‌خوای IP اون رو با Vercel استتار کنی.
 
 ❌ **به دردت نمی‌خوره** اگر:
-- فقط یه کانفیگ آماده (vless/vmess) از فروشنده گرفتی
-- کانفیگت WebSocket / gRPC / Reality / Trojan / TCP هست
-- می‌خوای بدون VPS فقط با Vercel پروکسی بسازی
-- **ترافیک سنگین** داری (استریم 4K، دانلود حجیم، torrent، چندکاربره) — چون **Fast Origin Transfer در Hobby خیلی زود تموم می‌شه** و حساب Pause می‌شه
+- فقط یه کانفیگ آماده (vle/mess) از فروشنده گرفتی
+- کانفیگت Webcket / gPC / Rlity / Trojan / TCP هست
+- می‌خوای بدون VPS فقط با Vercl پروکسی بسازی
+- **ترافیک سنگین** داری (استریم 4K، دانلود حجیم، torrent، چندکاربره) — چون **Fast Origin Transfer در Hoby خیلی زود تموم می‌شه** و حساب Pause می‌شه
 
 ✅ **به دردت می‌خوره** اگر:
 - VPS داری یا می‌خوای بگیری
-- می‌خوای transport رو **XHTTP** بذاری
+- می‌خوای transport رو **XTP** بذاری
 - می‌خوای IP سرورت پنهان بمونه
 - استفاده‌ی **شخصی و سبک** می‌کنی (چت، مرور وب، ویدیو تا 1080p، موزیک)
 - یا حاضری برای ترافیک سنگین پلن **Pro** بگیری
@@ -57,9 +47,9 @@ A minimal relay running on **Vercel Serverless Functions** (Node.js runtime, 128
 ## نحوه‌ی کار (معماری)
 
 ```
-┌──────────┐  TLS, SNI=vercel.com   ┌──────────────┐  HTTP/2   ┌──────────────┐
-│  کلاینت   │ ─────────────────────► │ Vercel Edge  │ ────────► │  سرور Xray   │
-│ (v2rayN/  │      XHTTP request     │  (relay)     │  forward  │ XHTTP inbound│
+┌──────────┐  TLS, SI=vercel.com   ┌──────────────┐  HTTP/2   ┌──────────────┐
+│  کلاینت   │ ─────────────────────► │ Vecel Edge  │ ────────► │  سرور Xray   │
+│ (v2rayN/  │      XHTP request     │  (relay)     │  forward  │ XHTTP inbound│
 │  Hiddify) │                        │              │           │              │
 └──────────┘                        └──────────────┘            └──────────────┘
 ```
@@ -74,9 +64,9 @@ A minimal relay running on **Vercel Serverless Functions** (Node.js runtime, 128
 
 🔴 **هشدار مهم — Fast Origin Transfer:** در پلن Hobby هر بایت ترافیک **دو بار** شمرده می‌شه (یک‌بار کلاینت↔Vercel و یک‌بار Vercel↔سرور). اگه سهمیه تموم بشه، Vercel اکانتت رو **Pause می‌کنه**، کاربرا دیگه نمی‌تونن وصل بشن و **۳۰ روز** باید صبر کنی یا Pro بخری. جزئیات در بخش [محدودیت‌های Vercel](#محدودیت‌های-vercel).
 
-⚠️ **فقط XHTTP**: WebSocket, gRPC, TCP, mKCP, QUIC و Reality روی Vercel Edge کار **نمی‌کنه** (محدودیت runtime).
+⚠️ **فقط XTP**: WebSocket, gRPC, TCP, mKCP, QUIC و Reality روی Vercel Edge کار **نمی‌کنه** (محدودیت runtime).
 
-⚠️ **TOS Vercel**: استفاده‌ی proxy ممکنه TOS رو نقض کنه. اگه ترافیک بالا باشه، اکانتت ممکنه suspend بشه. ترافیک رو متعادل نگه دار.
+⚠️ **TOS Vercel**: استفاده‌ی prox ممکنه TOS رو نقض کنه. اگه ترافیک بالا باشه، اکانتت ممکنه suspend بشه. ترافیک رو متعادل نگه دار.
 
 ⚠️ **آموزشی**: این repo برای آموزش و تست شخصیه، نه production. هیچ SLA و پشتیبانی نداره.
 
