@@ -4,7 +4,7 @@ import { pipeline } from "node:stream/promises";
 export const config = {
   api: { bodyParser: false },
   supportsResponseStreaming: true,
-  maxDuration: 60,
+  maxDuration: 50,
 };
 
 const TARGET_BASE = (process.env.TARGET_DOMAIN || "").replace(/\/$/, "");
@@ -73,7 +73,7 @@ export default async function handler(req, res) {
     console.error("relay error:", err);
     if (!res.headersSent) {
       res.statusCode = 502;
-      res.end("Bad Gateway: Tunnel Failed");
+      res.end("Bad Gateway: mamail");
     }
   }
 }
