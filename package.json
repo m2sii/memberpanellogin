@@ -1,7 +1,7 @@
 {
-  "name": "vercel-p-relay",
-  "version": "1.1.0",
-  "description": "Serverlessrelay for Xray/V2Ray on Ver (Node.js runtime, 128MB memory)",
+  "name": "verclay",
+  "version": "1.0",
+  "description": "Ser",
   "private": true,
   "license": "MIT"
 }
